@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-   "build": "npm install && npx tsc",   
- "start": "next start",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint"
-        },
+  },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
