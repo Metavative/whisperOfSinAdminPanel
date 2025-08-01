@@ -4,7 +4,7 @@ interface InputProps {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
   id?: string;
   name?: string;
-  value?: any; // Add this line
+value?: string | number | boolean;
 
   placeholder?: string;
   defaultValue?: string | number;
@@ -14,6 +14,7 @@ interface InputProps {
   max?: string;
   step?: number;
   disabled?: boolean;
+  
   success?: boolean;
   error?: boolean;
   hint?: string; // Optional hint text
@@ -25,7 +26,7 @@ const Input: FC<InputProps> = ({
   name,
   placeholder,
   defaultValue,
-  value,
+  // value,
   onChange,
   className = "",
   min,

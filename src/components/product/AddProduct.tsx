@@ -116,7 +116,7 @@ export default function AddProduct() {
       */
       // -------------------------------------------------------------------
 
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error adding product:', error);
       setSubmitStatus('error');
       if (axios.isAxiosError(error) && error.response) {

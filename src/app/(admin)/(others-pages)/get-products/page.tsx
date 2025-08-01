@@ -56,7 +56,7 @@ export default function AllProductsPage() {
         },
       });
       setProducts(response.data.products); // Assuming response.data is { message, products: [...] }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Failed to fetch products:', err);
       if (axios.isAxiosError(err) && err.response) {
         setError(`Error: ${err.response.data?.message || err.response.statusText}`);
@@ -96,7 +96,7 @@ export default function AllProductsPage() {
       } else {
         alert(response.data.message || "Failed to delete product.");
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error deleting product:', err);
       if (axios.isAxiosError(err) && err.response) {
         alert(`Failed to delete: ${err.response.data?.message || err.response.statusText}`);

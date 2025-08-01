@@ -36,9 +36,12 @@ export default function LoginPage() {
       // Redirect to dashboard (middleware will also handle this if cookie is set)
       router.push('/');
 
-    } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred.');
-    }
+    } catch (err) {
+if (err instanceof Error) {
+    console.error('Error message:', err.message);
+  } else {
+    console.error('Unknown error', err);
+  }    }
   };
 
   if (authLoading) {
@@ -93,7 +96,7 @@ export default function LoginPage() {
               href="/register"
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500"
             >
-              Don't have an account? Register
+              {"Don't have an account? Register"}
             </a>
           </div>
         </form>

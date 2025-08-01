@@ -97,7 +97,7 @@ export default function EditProductPage() {
         } else {
           setInitialDataError("Product not found.");
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error('Failed to fetch product:', err);
         if (axios.isAxiosError(err) && err.response) {
           setInitialDataError(`Error: ${err.response.data?.message || err.response.statusText}`);
@@ -218,7 +218,7 @@ export default function EditProductPage() {
       // Optionally, you might want to refresh the product data from the server
       // after a successful update to ensure the UI is fully consistent.
       // fetchProduct(); // Re-fetch to update productData and form fields
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error updating product:', error);
       setSubmitStatus('error');
       if (axios.isAxiosError(error) && error.response) {

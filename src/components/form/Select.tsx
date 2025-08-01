@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // Import useEffect
+import React from "react"; // Import useEffect
 
 interface Option {
   value: string;
