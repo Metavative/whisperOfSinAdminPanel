@@ -7,6 +7,7 @@ import Image from "next/image"; // For optimized image loading
 import { useRouter } from "next/navigation"; // For navigation
 
 
+
 // Define the Product type to ensure type safety for product data
 interface Product {
   _id: string;
@@ -49,7 +50,7 @@ export default function AllProductsPage() {
         return;
       }
 
-      const response = await axios.get(`http://192.168.18.208:5000/api/product/get`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/product/get`, {
         headers: {
           'access_token': token, // Use 'access_token' as per your backend middleware
         },
@@ -81,7 +82,7 @@ export default function AllProductsPage() {
         return;
       }
 
-      const response = await axios.delete(`http://192.168.18.208:5000/api/product/delete-product/${productId}`, {
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/product/delete-product/${productId}`, {
         headers: {
           'access_token': token, // Use 'access_token' for authenticated delete
         },

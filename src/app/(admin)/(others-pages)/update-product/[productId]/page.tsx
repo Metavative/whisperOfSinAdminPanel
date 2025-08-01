@@ -81,7 +81,7 @@ export default function EditProductPage() {
           return;
         }
 
-        const response = await axios.get(`http://192.168.18.208:5000/api/product/get?productId=${productId}`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/product/get?productId=${productId}`, {
           headers: {
             'access_token': token,
           },
@@ -203,7 +203,7 @@ export default function EditProductPage() {
       }
 
       const response = await axios.put(
-        `http://192.168.18.208:5000/api/product/update-product/${productId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/product/update-product/${productId}`,
         formData,
         {
           headers: {

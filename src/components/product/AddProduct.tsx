@@ -81,7 +81,7 @@ export default function AddProduct() {
       }
 
       const response = await axios.post(
-        'http://192.168.18.208:5000/api/product/create-product',
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/product/create-product`,
         formData,
         {
           headers: {

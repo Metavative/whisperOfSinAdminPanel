@@ -16,7 +16,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const response = await fetch('http://192.168.18.208:5000/api/auth/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
