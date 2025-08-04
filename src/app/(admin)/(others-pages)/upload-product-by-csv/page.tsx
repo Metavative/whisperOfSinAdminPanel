@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaFileCsv, FaUpload, FaSpinner } from 'react-icons/fa';
 import Papa from 'papaparse'; // PapaParse library ko import karein
@@ -9,13 +8,13 @@ import Papa from 'papaparse'; // PapaParse library ko import karein
 // Hum PapaParse ko asani se CDN se bhi load kar sakte hain, agar aapko isse package manager se install nahi karna
 // <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 
-const useAuth = () => {
-  // A simple mock for demonstration purposes
-  const [user, setUser] = useState<{ id: string; isAdmin: boolean } | null>({ id: 'mock-user-123', isAdmin: true });
-  const [isLoading, setIsLoading] = useState(false);
+// const useAuth = () => {
+//   // A simple mock for demonstration purposes
+//   const [user, setUser] = useState<{ id: string; isAdmin: boolean } | null>({ id: 'mock-user-123', isAdmin: true });
+//   const [isLoading, setIsLoading] = useState(false);
   
-  return { user, isLoading };
-};
+//   return { user, isLoading };
+// };
 
 /**
  * This page component provides a UI for administrators to upload a CSV file
@@ -30,14 +29,14 @@ export default function UploadProductsPage() {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
 
-  const { user, isLoading: authLoading } = useAuth();
-  const router = useRouter();
+  // const { user, isLoading: authLoading } = useAuth();
+  // const router = useRouter();
 
   // Redirects non-admin users away from this page
-  if (!authLoading && (!user || !user.isAdmin)) {
-    router.push('/');
-    return null;
-  }
+  // if (!authLoading && (!user || !user.isAdmin)) {
+  //   router.push('/');
+  //   return null;
+  // }
 
   /**
    * Handles the file input change event. Validates that the file is a CSV and counts the rows.
@@ -69,6 +68,7 @@ export default function UploadProductsPage() {
             setSelectedFile(null);
             setMessage('Error parsing CSV file. Please check its format.');
             setIsError(true);
+            console.log(error);
           }
         });
 
@@ -131,18 +131,19 @@ export default function UploadProductsPage() {
     } catch (error) {
       setMessage('A network error occurred. Please try again.');
       setIsError(true);
+      console.log(error)
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (authLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-        Loading...
-      </div>
-    );
-  }
+  // if (authLoading) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex items-center justify-center min-h-screen dark:bg-gray-900 text-white p-4">
