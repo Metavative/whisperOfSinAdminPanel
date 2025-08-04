@@ -146,7 +146,7 @@ const AppHeader: React.FC = () => {
           <div className="hidden lg:block">
             <form>
               <div className="relative">
-                <span className="absolute -translate-y-1/2 left-4 top-1/2 pointer-events-none">
+                {/* <span className="absolute -translate-y-1/2 left-4 top-1/2 pointer-events-none">
                   <svg
                     className="fill-gray-500 dark:fill-gray-400"
                     width="20"
@@ -162,7 +162,7 @@ const AppHeader: React.FC = () => {
                       fill=""
                     />
                   </svg>
-                </span>
+                </span> */}
                 {/* <input
                   ref={inputRef}
                   type="text"
