@@ -311,7 +311,7 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <h1 className="text-blue font-bold">Whisper Of Sins</h1>
+        <h1 className="text-blue font-bold dark:text-white">Whisper Of Sins</h1>
         {/* <Link href="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
