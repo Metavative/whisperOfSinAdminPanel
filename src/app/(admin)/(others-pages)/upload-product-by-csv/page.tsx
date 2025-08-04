@@ -110,7 +110,7 @@ export default function UploadProductsPage() {
         return;
       }
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/product/reate-product-by-csv`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/product/create-product-by-csv`, {
         method: 'POST',
         body: formData,
         headers: {
