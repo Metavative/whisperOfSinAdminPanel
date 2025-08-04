@@ -46,7 +46,8 @@ const navItems: NavItem[] = [
       { name: "Add to Product", path: "/add-to-product", pro: false },
             // { name: "form", path: "/form-elements", pro: false },
 
-      { name: "List Of Products", path: "/get-products", pro: false }
+      { name: "Upload Product By CSV", path: "/upload-product-by-csv", pro: false },
+      { name: "List Of Products", path: "/get-products", pro: false },
     ],
   },
   // {

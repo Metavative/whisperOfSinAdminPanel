@@ -7,7 +7,7 @@ import RadioButtons from "@/components/form/form-elements/RadioButtons";
 import ToggleSwitch from "@/components/form/form-elements/ToggleSwitch";
 import React, { useState } from "react";
 import axios from "axios";
-import StatusMessage from "@/components/common/SetStatusMessage"; // Import StatusMessage
+import StatusMessage from "@/components/common/SetStatusMessage"; // Import StatusMessage 
 
 export default function AddProduct() {
   // Individual state variables for each image, managed by this parent component
