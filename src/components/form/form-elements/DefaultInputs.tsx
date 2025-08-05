@@ -31,8 +31,8 @@ export default function DefaultInputs({
   setPrice,
   category,
   setCategory,
-  location,
-  setLocation,
+  // location,
+  // setLocation,
   reviews,
   setReviews
 }: DefaultInputsProps) {
@@ -63,9 +63,9 @@ export default function DefaultInputs({
     setReviews(e.target.value);
   };
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
-  };
+  // const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setLocation(e.target.value);
+  // };
 
   // --- This one is for your custom TextArea component ---
   // It correctly expects just the string value, as per your TextArea.tsx
