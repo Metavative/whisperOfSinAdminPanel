@@ -162,7 +162,7 @@ export default function DefaultInputs({
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <Label htmlFor="location-input">Enter your Shop Location</Label>
           <div className="relative">
             <Input
@@ -193,7 +193,7 @@ export default function DefaultInputs({
               </svg>
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
     </ComponentCard>
   );

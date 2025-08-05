@@ -17,6 +17,10 @@ export default function AddProduct() {
   const [image4, setImage4] = useState<File | null>(null);
   const [image5, setImage5] = useState<File | null>(null);
 
+  //New State variable for videos
+  const [video1, setVideo1] = useState<File | null>(null);
+  const [video2, setVideo2] = useState<File | null>(null);
+
   // Other product details states
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -69,6 +73,14 @@ export default function AddProduct() {
     imagesToUpload.forEach((file, index) => {
       if (file instanceof File) {
         formData.append(`image${index + 1}`, file, file.name);
+      }
+    });
+
+    // Append video files
+    const videosToUpload = [video1, video2];
+    videosToUpload.forEach((file, index) => {
+      if (file instanceof File) {
+        formData.append(`video${index + 1 }`, file, file.name);
       }
     });
 
@@ -132,7 +144,6 @@ export default function AddProduct() {
   return (
     <div>
       <PageBreadcrumb pageTitle="Add Product" />
-      <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display status message here */}
       <form onSubmit={handlerSubmit} className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <div className="space-y-6">
           <DefaultInputs
@@ -151,6 +162,9 @@ export default function AddProduct() {
             image3={image3} setImage3={setImage3}
             image4={image4} setImage4={setImage4}
             image5={image5} setImage5={setImage5}
+            // Video props
+            video1={video1} setVideo1={setVideo1}
+            video2={video2} setVideo2={setVideo2}
           />
           <RadioButtons initialBidProduct={bidProduct} initialBidTimer={bidtimer} setBidProduct={setBidProduct} setBidTimer={setBidTimer} />
           <ToggleSwitch
@@ -162,6 +176,8 @@ export default function AddProduct() {
             initialNewArrival={newArrival}
           />
         </div>
+          <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display status message here */}
+
         <div className="col-span-2">
           <button type="submit" className="btn px-4 py-2 bg-blue-500  w-full dark:text-white" disabled={submitStatus === 'loading'}>
             {submitStatus === 'loading' ? 'Adding Product...' : 'Add Product'}
@@ -171,3 +187,4 @@ export default function AddProduct() {
     </div>
   );
 }
+

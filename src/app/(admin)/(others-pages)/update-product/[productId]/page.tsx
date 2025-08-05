@@ -21,6 +21,7 @@ interface Product {
   location: string;
   reviews: string;
   image: string[]; // Assuming Cloudinary returns an array of URLs
+  video?: string[]; // Added video field to Product interface
   hot: boolean;
   featured: boolean;
   newArrival: boolean;
@@ -57,6 +58,10 @@ export default function EditProductPage() {
   // Image states: currentImageUrls are from the fetched product, newImages are local File objects
   const [currentImageUrls, setCurrentImageUrls] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<(File | null)[]>([null, null, null, null, null]);
+
+  // Video states: currentVideoUrls are from the fetched product, newVideos are local File objects
+  const [currentVideoUrls, setCurrentVideoUrls] = useState<string[]>([]);
+  const [newVideos, setNewVideos] = useState<(File | null)[]>([null, null]); // Max 2 videos
 
   // States for form submission feedback
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -129,6 +134,9 @@ export default function EditProductPage() {
 
       setCurrentImageUrls(productData.image || []);
       setNewImages([null, null, null, null, null]); // Reset new images on load of a new product
+
+      setCurrentVideoUrls(productData.video || []); // Populate current video URLs
+      setNewVideos([null, null]); // Reset new videos on load of a new product
     }
   }, [productData]); // Re-run when productData changes
 
@@ -143,13 +151,49 @@ export default function EditProductPage() {
     return upload_area.src;
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  // Helper function to get the preview URL for videos
+  const getVideoPreviewSrc = (file: File | null | string) => {
+    if (file instanceof File) {
+      return URL.createObjectURL(file);
+    }
+    if (typeof file === 'string') {
+      return file; // It's an existing URL
+    }
+    return null; // No file or URL
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0] || null;
     setNewImages(prev => {
       const updated = [...prev];
       updated[index] = file;
       return updated;
     });
+    // If a new file is selected, remove the corresponding current URL
+    if (file && currentImageUrls[index]) {
+      setCurrentImageUrls(prev => {
+        const updated = [...prev];
+        updated[index] = ''; // Clear the old URL at this position
+        return updated;
+      });
+    }
+  };
+
+  const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = e.target.files?.[0] || null;
+    setNewVideos(prev => {
+      const updated = [...prev];
+      updated[index] = file;
+      return updated;
+    });
+    // If a new file is selected, remove the corresponding current URL
+    if (file && currentVideoUrls[index]) {
+      setCurrentVideoUrls(prev => {
+        const updated = [...prev];
+        updated[index] = ''; // Clear the old URL at this position
+        return updated;
+      });
+    }
   };
 
   const handlerUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -186,13 +230,25 @@ export default function EditProductPage() {
       formData.append('bidtimer', bidtimer.toISOString());
     }
 
+    // Append new image files
     newImages.forEach((file, index) => {
       if (file instanceof File) {
         formData.append(`image${index + 1}`, file, file.name);
       }
     });
+    // Append existing image URLs that were not replaced
+    formData.append('existingImageUrls', JSON.stringify(currentImageUrls.filter(url => url !== '')));
 
-    formData.append('existingImageUrls', JSON.stringify(currentImageUrls));
+
+    // Append new video files
+    newVideos.forEach((file, index) => {
+      if (file instanceof File) {
+        formData.append(`video${index + 1}`, file, file.name);
+      }
+    });
+    // Append existing video URLs that were not replaced
+    formData.append('existingVideoUrls', JSON.stringify(currentVideoUrls.filter(url => url !== '')));
+
 
     try {
       const token = localStorage.getItem('userToken');
@@ -208,6 +264,7 @@ export default function EditProductPage() {
         {
           headers: {
             'access_token': token,
+            'Content-Type': 'multipart/form-data', // Important for FormData
           },
         }
       );
@@ -215,9 +272,12 @@ export default function EditProductPage() {
       console.log('Product updated successfully:', response.data);
       setSubmitStatus('success');
       setSubmitMessage(response.data.message || 'Product updated successfully!');
-      // Optionally, you might want to refresh the product data from the server
-      // after a successful update to ensure the UI is fully consistent.
-      // fetchProduct(); // Re-fetch to update productData and form fields
+      // Re-fetch product data to update the UI with new URLs
+      // Note: This will reset `newImages` and `newVideos` states.
+      // If you want to keep the uploaded files in the UI until next page load,
+      // you'd need a more complex state management for file previews.
+      // For now, re-fetching will show the updated Cloudinary URLs.
+      // fetchProduct(); // This would be the function to re-fetch product details
     } catch (error) {
       console.error('Error updating product:', error);
       setSubmitStatus('error');
@@ -262,7 +322,6 @@ export default function EditProductPage() {
   return (
     <div className="container mx-auto p-4">
       <PageBreadcrumb pageTitle={`Edit Product: ${productData.title}`} />
-      <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display update status message */}
       <form onSubmit={handlerUpdate} className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <div className="space-y-6">
           <DefaultInputs
@@ -275,26 +334,87 @@ export default function EditProductPage() {
           />
         </div>
         <div className="space-y-6">
+          {/* Image Upload Section */}
           <div className="bg-white p-6 rounded-lg shadow-theme-xs dark:bg-gray-800">
             <h1 className="mb-4 text-lg font-semibold dark:text-white">Upload Images (existing shown, new will replace/add)</h1>
-            <div className="flex justify-center gap-4 mb-6">
+            <div className="flex justify-center gap-4 mb-6 flex-wrap">
               {[0, 1, 2, 3, 4].map((index) => (
-                <label key={index} htmlFor={`editImage${index}`} className="block">
+                <label key={index} htmlFor={`editImage${index}`} className="block cursor-pointer relative">
                   <Image
-                    className="w-20 h-20 object-cover border cursor-pointer rounded"
+                    className="w-20 h-20 object-cover border rounded"
                     src={getPreviewSrc(index)}
                     alt={`Product Image ${index + 1}`}
                     width={80}
                     height={80}
+                    priority
                   />
                   <input
-                    onChange={(e) => handleFileChange(e, index)}
+                    onChange={(e) => handleImageFileChange(e, index)}
                     type="file"
                     id={`editImage${index}`}
                     hidden
                     accept="image/*"
                   />
+                  {/* Small replace button for images - optional, but consistent with video */}
+                  {newImages[index] || currentImageUrls[index] ? (
+                    <label
+                      htmlFor={`editImage${index}`}
+                      className="absolute bottom-0 right-0 bg-blue-500 text-white text-xs px-1 py-0.5 rounded-full cursor-pointer hover:bg-blue-600 transition-colors"
+                    >
+                      Replace
+                    </label>
+                  ) : null}
                 </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Video Upload Section */}
+          <div className="bg-white p-6 rounded-lg shadow-theme-xs dark:bg-gray-800">
+            <h1 className="text-gray-500 font-bold mb-4 dark:text-gray-200">Upload Videos (Max 2)</h1>
+            <div className="flex justify-center gap-4 mb-6 flex-wrap">
+              {[0, 1].map((index) => ( // Loop for up to 2 videos
+                <div key={`video-${index}`} className="relative w-24 h-24">
+                  <label htmlFor={`editVideo${index}`} className="block cursor-pointer">
+                    {(newVideos[index] || currentVideoUrls[index]) ? (
+                      <video
+                        className="w-24 h-24 object-cover border rounded"
+                        src={getVideoPreviewSrc(newVideos[index] || currentVideoUrls[index]) || undefined}
+                        controls
+                        autoPlay
+                        loop
+                        muted
+                        width={100}
+                        height={100}
+                      />
+                    ) : (
+                      <Image
+                        className="w-24 h-24 object-cover border rounded"
+                        src={upload_area.src} // Generic video placeholder
+                        alt={`Upload Video ${index + 1}`}
+                        width={100}
+                        height={100}
+                        priority
+                      />
+                    )}
+                    
+                    <input
+                      onChange={(e) => handleVideoFileChange(e, index)}
+                      type="file"
+                      id={`editVideo${index}`}
+                      hidden
+                      accept="video/*"
+                    />
+                  </label>
+                  {(newVideos[index] || currentVideoUrls[index]) && ( // Only show replace button if a video is selected
+                    <label
+                      htmlFor={`editVideo${index}`}
+                      className="absolute bottom-1 right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded-full cursor-pointer hover:bg-blue-600 transition-colors"
+                    >
+                      Replace
+                    </label>
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -314,9 +434,11 @@ export default function EditProductPage() {
             initialNewArrival={newArrival}
           />
         </div>
+
         <div className="col-span-2">
-          <button type="submit" className="btn px-4 py-2 bg-blue-500  w-full dark:text-white" disabled={submitStatus === 'loading'}>
-            {submitStatus === 'loading' ? 'Adding Product...' : 'Add Product'}
+        <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display update status message */}
+          <button type="submit" className="btn px-4 py-2 bg-blue-500 w-full dark:text-white" disabled={submitStatus === 'loading'}>
+            {submitStatus === 'loading' ? 'Updating Product...' : 'Update Product'}
           </button>
         </div>
       </form>

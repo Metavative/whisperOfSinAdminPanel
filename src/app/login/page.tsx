@@ -92,12 +92,12 @@ if (err instanceof Error) {
             >
               Sign In
             </button>
-            <a
+            {/* <a
               href="/register"
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500"
             >
               {"Don't have an account? Register"}
-            </a>
+            </a> */}
           </div>
         </form>
       </div>
