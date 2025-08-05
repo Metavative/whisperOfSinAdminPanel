@@ -27,7 +27,7 @@ const Input: FC<InputProps> = ({
   id,
   name,
   placeholder,
-  defaultValue,
+  // defaultValue,
   value, // This prop is now correctly typed as string | number
   onChange,
   className = "",
