@@ -101,7 +101,7 @@ export default function RadioButtons({ initialBidProduct, setBidProduct, initial
         />
       </div>
 
-      {selectedOption === "true" && ( // Only show bid timer inputs if "Bidding Product" is selected
+      {selectedOption === "true"  && ( // Only show bid timer inputs if "Bidding Product" is selected
         <div className="mt-6">
           {/* Bid End Date Input using custom DatePicker */}
           <DatePicker
