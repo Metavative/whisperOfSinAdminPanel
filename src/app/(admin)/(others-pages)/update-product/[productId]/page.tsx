@@ -120,6 +120,7 @@ export default function EditProductPage() {
   // Effect to populate form fields once productData is fetched
   useEffect(() => {
     if (productData) {
+      console.log(productData);
       setTitle(productData.title);
       setDescription(productData.description);
       setPrice(String(productData.price));
@@ -130,7 +131,8 @@ export default function EditProductPage() {
       setFeatured(productData.featured);
       setNewArrival(productData.newArrival);
       setBidProduct(productData.bidProduct);
-      setBidTimer(productData.bidtimer ? new Date(productData.bidtimer) : null);
+      // setBidTimer(productData.bidtimer ? new Date(productData.bidtimer) : null);
+          setBidTimer(productData.bidtimer && productData.bidtimer !== "" ? new Date(productData.bidtimer) : null);
 
       setCurrentImageUrls(productData.image || []);
       setNewImages([null, null, null, null, null]); // Reset new images on load of a new product
@@ -437,9 +439,11 @@ export default function EditProductPage() {
 
         <div className="col-span-2">
         <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display update status message */}
-          <button type="submit" className="btn px-4 py-2 bg-blue-500 w-full dark:text-white" disabled={submitStatus === 'loading'}>
+
+        <button type="submit" className="btn px-4 py-2 bg-blue-500 w-full dark:text-white" disabled={submitStatus === 'loading'}>
             {submitStatus === 'loading' ? 'Updating Product...' : 'Update Product'}
           </button>
+
         </div>
       </form>
     </div>

@@ -176,9 +176,9 @@ export default function AddProduct() {
             initialNewArrival={newArrival}
           />
         </div>
-          <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display status message here */}
 
         <div className="col-span-2">
+          <StatusMessage status={submitStatus} message={submitMessage} /> {/* Display status message here */}
           <button type="submit" className="btn px-4 py-2 bg-blue-500  w-full dark:text-white" disabled={submitStatus === 'loading'}>
             {submitStatus === 'loading' ? 'Adding Product...' : 'Add Product'}
           </button>
